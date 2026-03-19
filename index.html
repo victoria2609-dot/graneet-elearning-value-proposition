@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Graneet — Maîtriser nos Value Propositions</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --dark:#0C1410;--dark2:#131B17;--dark3:#1A2420;
+  --green:#1B4332;--green-mid:#2D6A4F;--green-light:#52B788;--green-pale:#D8F3DC;
+  --cream:#F2EFE6;--cream2:#E8E4DA;
+  --gold:#EDD94C;--gold-bg:#FFFBE6;--gold-dark:#A08600;
+  --red-soft:#FEE2E2;--red-text:#991B1B;
+  --gray:#6B7280;--white:#FFFFFF;
+  --r:14px;--r-sm:8px;
+  --shadow:0 2px 16px rgba(12,20,16,.10);--shadow-lg:0 8px 48px rgba(12,20,16,.18);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:9999;transition:opacity .7s ease;}
+#loading.out{opacity:0;pointer-events:none;}
+.loading-inner{display:flex;align-items:center;gap:14px;animation:fadeUp .6s ease both;}
+.loading-inner span{font-size:1.4rem;font-weight:600;color:var(--cream);letter-spacing:-.02em;}
+.loading-bar-track{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.06);}
+.loading-bar{height:100%;background:var(--green-light);animation:loadBar 1.5s ease forwards;}
+@keyframes loadBar{from{width:0}to{width:100%}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
+
+/* SCREENS */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* WELCOME */
+#screen-welcome{background:var(--dark);min-height:100vh;flex-direction:row;align-items:stretch;}
+.welcome-left{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:52px 60px;position:relative;overflow:hidden;}
+.welcome-left::before{content:'';position:absolute;width:700px;height:700px;background:radial-gradient(circle,rgba(82,183,136,.10) 0%,transparent 65%);top:-280px;right:-200px;border-radius:50%;pointer-events:none;}
+.welcome-left::after{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(237,217,76,.07) 0%,transparent 65%);bottom:-150px;left:-150px;border-radius:50%;pointer-events:none;}
+.logo-block{position:relative;z-index:1;display:flex;align-items:center;gap:12px;}
+.logo-wordmark{font-size:1.15rem;font-weight:600;color:var(--cream);letter-spacing:-.02em;}
+.welcome-hero{position:relative;z-index:1;}
+.welcome-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(82,183,136,.10);border:1px solid rgba(82,183,136,.18);color:var(--green-light);font-size:.68rem;font-weight:700;padding:5px 14px;border-radius:100px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:28px;}
+.welcome-hero h1{font-family:'DM Serif Display',serif;font-size:clamp(2.4rem,4.5vw,3.8rem);color:var(--white);line-height:1.06;letter-spacing:-.025em;margin-bottom:22px;}
+.welcome-hero h1 em{font-style:italic;color:var(--gold);}
+.welcome-message{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);padding:22px 26px;margin-bottom:36px;max-width:500px;}
+.welcome-message p{color:rgba(255,255,255,.55);font-size:.91rem;line-height:1.75;}
+.welcome-message p strong{color:rgba(255,255,255,.85);font-weight:500;}
+.btn-start{display:inline-flex;align-items:center;gap:10px;background:var(--green-light);color:var(--dark);border:none;padding:15px 32px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .22s;letter-spacing:-.005em;}
+.btn-start:hover{background:var(--gold);transform:translateY(-2px);box-shadow:0 10px 28px rgba(237,217,76,.22);}
+.btn-start svg{transition:transform .22s;}
+.btn-start:hover svg{transform:translateX(5px);}
+.welcome-stats{display:flex;gap:36px;position:relative;z-index:1;}
+.stat-num{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--white);letter-spacing:-.03em;line-height:1;}
+.stat-label{font-size:.69rem;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.07em;margin-top:4px;}
+.welcome-right{width:380px;min-width:380px;background:var(--dark2);border-left:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;padding:52px 32px;overflow-y:auto;}
+.welcome-right h3{font-family:'DM Serif Display',serif;font-size:1.05rem;font-weight:400;color:var(--white);margin-bottom:28px;}
+.roadmap-month{margin-bottom:28px;}
+.rm-month-label{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.rm-dot{width:7px;height:7px;border-radius:50%;background:var(--green-light);}
+.rm-dot.gold{background:var(--gold);}
+.rm-month-name{font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.35);}
+.rm-item{display:flex;gap:10px;padding:10px 14px;border-radius:8px;margin-bottom:5px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);}
+.rm-week{font-size:.64rem;font-weight:700;color:var(--green-light);text-transform:uppercase;letter-spacing:.06em;min-width:46px;padding-top:2px;}
+.rm-item.gold .rm-week{color:var(--gold);}
+.rm-title{font-size:.78rem;font-weight:600;color:rgba(255,255,255,.75);margin-bottom:1px;}
+.rm-sub{font-size:.69rem;color:rgba(255,255,255,.28);line-height:1.4;}
+
+/* APP */
+#screen-app{flex-direction:row;}
+
+/* SIDEBAR */
+.sidebar{width:272px;min-width:272px;background:var(--dark);display:flex;flex-direction:column;height:100vh;position:sticky;top:0;overflow-y:auto;}
+.sidebar::-webkit-scrollbar{width:4px;}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px;}
+.sb-header{padding:26px 22px 20px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.sb-logo-text{font-size:.95rem;font-weight:600;color:var(--cream);letter-spacing:-.01em;}
+.sb-badge{display:inline-flex;align-items:center;background:rgba(237,217,76,.09);border:1px solid rgba(237,217,76,.18);color:var(--gold);font-size:.63rem;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.07em;text-transform:uppercase;}
+.sb-progress{margin-top:14px;}
+.sb-prog-top{display:flex;justify-content:space-between;margin-bottom:7px;}
+.sb-prog-top span{font-size:.67rem;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.06em;}
+.sb-prog-top strong{font-size:.72rem;color:var(--green-light);}
+.prog-track{height:3px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--green-light),var(--gold));border-radius:2px;transition:width .6s ease;}
+.sb-nav{flex:1;padding:12px 0;}
+.sb-section-title{font-size:.58rem;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:rgba(255,255,255,.18);padding:8px 22px 4px;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 16px 9px 22px;cursor:pointer;transition:all .14s;border-left:2px solid transparent;user-select:none;}
+.sb-item:hover{background:rgba(255,255,255,.04);}
+.sb-item.active{background:rgba(82,183,136,.07);border-left-color:var(--green-light);}
+.sb-check{width:17px;height:17px;border-radius:50%;border:1.5px solid rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s;}
+.sb-item.done .sb-check{background:var(--green-light);border-color:var(--green-light);}
+.sb-check-icon{opacity:0;transition:opacity .18s;}
+.sb-item.done .sb-check-icon{opacity:1;}
+.sb-label{font-size:.75rem;color:rgba(255,255,255,.45);line-height:1.35;flex:1;}
+.sb-item.active .sb-label{color:rgba(255,255,255,.88);font-weight:500;}
+.sb-item.done .sb-label{color:rgba(255,255,255,.3);}
+.sb-week-tag{font-size:.59rem;color:var(--green-light);font-weight:700;flex-shrink:0;}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;background:var(--cream);}
+
+/* MODULE HEADER */
+.mod-header{background:var(--dark);padding:40px 52px 36px;position:relative;overflow:hidden;}
+.mod-header::before{content:'';position:absolute;width:400px;height:400px;background:radial-gradient(circle,rgba(82,183,136,.09) 0%,transparent 65%);top:-150px;right:-80px;pointer-events:none;}
+.mod-header-inner{position:relative;z-index:1;}
+.mod-breadcrumb{font-size:.67rem;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+.mod-header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;}
+.mod-module-tag{display:inline-flex;align-items:center;gap:6px;border-radius:100px;padding:3px 12px;font-size:.63rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:10px;}
+.tag-green{background:rgba(82,183,136,.12);color:var(--green-light);}
+.tag-gold{background:rgba(237,217,76,.12);color:var(--gold);}
+.tag-blue{background:rgba(96,165,250,.12);color:#93C5FD;}
+.tag-purple{background:rgba(167,139,250,.12);color:#C4B5FD;}
+.tag-orange{background:rgba(251,146,60,.12);color:#FDB172;}
+.tag-gray{background:rgba(255,255,255,.07);color:rgba(255,255,255,.4);}
+.mod-header h2{font-family:'DM Serif Display',serif;font-size:clamp(1.4rem,2.5vw,2rem);color:var(--white);line-height:1.12;letter-spacing:-.02em;}
+.mod-week-badge{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 18px;text-align:center;flex-shrink:0;}
+.wk-label{font-size:.6rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);margin-bottom:2px;}
+.wk-num{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--green-light);line-height:1;}
+
+/* MODULE BODY */
+.mod-body{padding:40px 52px 60px;max-width:860px;}
+
+/* CARDS */
+.card{background:var(--white);border-radius:var(--r);border:1px solid rgba(0,0,0,.07);padding:26px 30px;margin-bottom:18px;box-shadow:var(--shadow);}
+.card-label{display:flex;align-items:center;gap:8px;font-size:.67rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:12px;}
+.card-label .dot{width:8px;height:8px;border-radius:50%;}
+.dot-red{background:#EF4444;}
+.dot-green{background:var(--green-light);}
+.dot-blue{background:#60A5FA;}
+.dot-gold{background:var(--gold);}
+.card-label span{color:var(--gray);}
+.card h4{font-size:.9rem;font-weight:700;margin-bottom:9px;color:var(--dark);}
+.card p{font-size:.87rem;line-height:1.7;color:#374151;}
+.card p+p{margin-top:8px;}
+.pill-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px;}
+.pill{display:inline-flex;align-items:center;gap:5px;background:var(--green-pale);color:var(--green);font-size:.72rem;font-weight:600;padding:4px 11px;border-radius:100px;}
+.pill.gold{background:var(--gold-bg);color:var(--gold-dark);}
+.pain-card{background:#FFF7ED;border:1px solid #FED7AA;border-radius:var(--r);padding:20px 26px;margin-bottom:14px;}
+.pain-card .pi{font-size:1.3rem;margin-bottom:8px;display:block;}
+.pain-card p{font-size:.86rem;line-height:1.7;color:#92400E;}
+.benefit-card{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:var(--r);padding:20px 26px;margin-bottom:14px;}
+.benefit-card p{font-size:.86rem;line-height:1.7;color:#166534;}
+.emotion-card{background:#EFF6FF;border:1px solid #BFDBFE;border-radius:var(--r);padding:18px 24px;margin-bottom:14px;}
+.emotion-card p{font-size:.86rem;line-height:1.7;color:#1E40AF;}
+.na-card{background:var(--red-soft);border:1px solid #FECACA;border-radius:var(--r-sm);padding:13px 17px;margin-bottom:9px;display:flex;align-items:flex-start;gap:9px;}
+.na-card p{font-size:.78rem;line-height:1.6;color:var(--red-text);}
+
+/* QUOTE BOX */
+.quote-box{background:var(--dark);border-radius:var(--r);padding:22px 28px;margin-bottom:16px;}
+.quote-box p{font-family:'DM Serif Display',serif;font-size:1.08rem;color:var(--white);line-height:1.45;letter-spacing:-.01em;}
+.quote-box p em{font-style:italic;color:var(--gold);}
+
+/* QUIZ */
+.quiz-block{background:var(--dark);border-radius:var(--r);padding:30px 34px;margin-bottom:18px;}
+.quiz-block h3{font-family:'DM Serif Display',serif;font-size:1.1rem;color:var(--white);margin-bottom:8px;letter-spacing:-.01em;}
+.quiz-block>p{font-size:.82rem;color:rgba(255,255,255,.4);margin-bottom:20px;line-height:1.6;}
+.quiz-options{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;font-size:.83rem;color:rgba(255,255,255,.7);cursor:pointer;transition:all .16s;text-align:left;font-family:'DM Sans',sans-serif;}
+.quiz-opt:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.2);}
+.quiz-opt.correct{background:rgba(82,183,136,.15);border-color:var(--green-light);color:var(--green-pale);pointer-events:none;}
+.quiz-opt.wrong{background:rgba(239,68,68,.1);border-color:#EF4444;color:#FCA5A5;pointer-events:none;}
+.quiz-feedback{margin-top:14px;padding:13px 17px;border-radius:8px;font-size:.81rem;line-height:1.6;display:none;}
+.quiz-feedback.show{display:block;animation:fadeIn .3s ease;}
+.quiz-feedback.ok{background:rgba(82,183,136,.12);color:var(--green-pale);}
+.quiz-feedback.ko{background:rgba(239,68,68,.1);color:#FCA5A5;}
+
+/* SCENARIO */
+.scenario-block{background:var(--white);border-radius:var(--r);border:1px solid rgba(0,0,0,.07);padding:26px 30px;margin-bottom:18px;box-shadow:var(--shadow);}
+.scenario-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray);margin-bottom:10px;}
+.scenario-context{background:var(--cream2);border-radius:8px;padding:13px 17px;margin-bottom:16px;font-size:.84rem;color:#374151;line-height:1.65;border-left:3px solid var(--green-light);}
+.scenario-q{font-size:.84rem;font-weight:600;margin-bottom:13px;color:var(--dark);}
+.scenario-choices{display:flex;flex-direction:column;gap:8px;}
+.scenario-choice{background:var(--cream2);border:1.5px solid transparent;border-radius:9px;padding:12px 16px;font-size:.82rem;color:#374151;cursor:pointer;transition:all .15s;text-align:left;font-family:'DM Sans',sans-serif;}
+.scenario-choice:hover{border-color:var(--green-light);background:var(--green-pale);}
+.scenario-choice.ok{border-color:var(--green-light);background:var(--green-pale);color:var(--green);pointer-events:none;}
+.scenario-choice.ko{border-color:#EF4444;background:var(--red-soft);color:var(--red-text);pointer-events:none;}
+.scenario-result{margin-top:13px;padding:11px 15px;border-radius:8px;font-size:.8rem;line-height:1.6;display:none;}
+.scenario-result.show{display:block;animation:fadeIn .3s ease;}
+.scenario-result.ok{background:var(--green-pale);color:var(--green);}
+.scenario-result.ko{background:var(--red-soft);color:var(--red-text);}
+
+/* CHECKLIST */
+.checklist{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.check-item{display:flex;align-items:flex-start;gap:11px;background:var(--white);border:1px solid rgba(0,0,0,.07);border-radius:9px;padding:12px 15px;cursor:pointer;transition:all .15s;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.check-item:hover{border-color:var(--green-light);}
+.check-item.checked{background:var(--green-pale);border-color:var(--green-light);}
+.check-box{width:19px;height:19px;border-radius:5px;border:1.5px solid rgba(0,0,0,.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px;}
+.check-item.checked .check-box{background:var(--green-light);border-color:var(--green-light);}
+.check-tick{opacity:0;transition:opacity .15s;}
+.check-item.checked .check-tick{opacity:1;}
+.check-text{font-size:.82rem;line-height:1.55;color:#374151;}
+.check-text strong{font-weight:600;color:var(--dark);}
+
+/* NAV */
+.mod-nav{display:flex;align-items:center;justify-content:space-between;padding:22px 52px;background:var(--white);border-top:1px solid rgba(0,0,0,.07);}
+.btn-nav{display:inline-flex;align-items:center;gap:8px;border:1.5px solid rgba(0,0,0,.12);background:transparent;padding:10px 20px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .17s;color:var(--dark);}
+.btn-nav:hover{border-color:var(--green-mid);color:var(--green-mid);}
+.btn-nav.primary{background:var(--green-light);border-color:var(--green-light);color:var(--dark);}
+.btn-nav.primary:hover{background:var(--green-mid);border-color:var(--green-mid);color:var(--white);}
+.btn-nav:disabled{opacity:.3;pointer-events:none;}
+.mod-nav-center{font-size:.73rem;color:var(--gray);}
+
+/* CONGRATS */
+#screen-congrats{background:var(--dark);align-items:center;justify-content:center;}
+.congrats-inner{text-align:center;max-width:540px;padding:40px 24px;}
+.trophy{font-size:3.5rem;display:block;margin-bottom:24px;animation:bounce 1s ease infinite alternate;}
+.congrats-inner h2{font-family:'DM Serif Display',serif;font-size:2.6rem;color:var(--white);letter-spacing:-.03em;margin-bottom:14px;}
+.congrats-inner h2 em{font-style:italic;color:var(--gold);}
+.congrats-inner p{color:rgba(255,255,255,.45);font-size:.93rem;line-height:1.75;margin-bottom:32px;}
+.btn-restart{display:inline-flex;align-items:center;gap:8px;background:var(--green-light);color:var(--dark);border:none;padding:14px 28px;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-restart:hover{background:var(--gold);}
+
+/* MISC */
+.divider{height:1px;background:rgba(0,0,0,.07);margin:24px 0;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.section-title{font-family:'DM Serif Display',serif;font-size:1.22rem;color:var(--dark);margin-bottom:16px;letter-spacing:-.01em;}
+.intro-text{font-size:.89rem;line-height:1.75;color:#374151;margin-bottom:18px;}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="loading-inner">
+    <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+      <path d="M6 28L14 20L22 28" stroke="#52B788" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M14 20L22 12L30 20" stroke="#52B788" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M3 14L11 6" stroke="rgba(82,183,136,.4)" stroke-width="4.5" stroke-linecap="round"/>
+    </svg>
+    <span>Graneet</span>
+  </div>
+  <div class="loading-bar-track"><div class="loading-bar"></div></div>
+</div>
+
+<!-- WELCOME -->
+<div class="screen" id="screen-welcome">
+  <div class="welcome-left">
+    <div class="logo-block">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+        <path d="M6 28L14 20L22 28" stroke="#52B788" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M14 20L22 12L30 20" stroke="#52B788" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M3 14L11 6" stroke="rgba(82,183,136,.45)" stroke-width="4.5" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-wordmark">Graneet</span>
+    </div>
+
+    <div class="welcome-hero">
+      <div class="welcome-tag">📢 Formation Value Proposition</div>
+      <h1>Bienvenue chez<br><em>Graneet</em> 💎</h1>
+      <div class="welcome-message">
+        <p>Nous sommes ravis de te voir rejoindre l'aventure !<br><br>
+        Voici un <strong>parcours progressif sur 2 mois</strong> qui te permettra de mieux comprendre notre environnement et notre solution — et surtout de savoir en parler avec conviction face à nos clients et prospects.</p>
+      </div>
+      <button class="btn-start" onclick="startApp()">
+        Commencer le parcours
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <div class="welcome-stats">
+      <div><div class="stat-num">8</div><div class="stat-label">Value Props</div></div>
+      <div><div class="stat-num">2</div><div class="stat-label">Mois</div></div>
+      <div><div class="stat-num">6</div><div class="stat-label">Modules</div></div>
+    </div>
+  </div>
+
+  <div class="welcome-right">
+    <h3>Ton parcours en un coup d'œil</h3>
+    <div class="roadmap-month">
+      <div class="rm-month-label"><div class="rm-dot"></div><span class="rm-month-name">Mois 1 — Fondations</span></div>
+      <div class="rm-item"><div class="rm-week">S1–2</div><div><div class="rm-title">Comprendre nos clients BTP</div><div class="rm-sub">Leurs douleurs, leur quotidien, leurs enjeux</div></div></div>
+      <div class="rm-item"><div class="rm-week">S3–4</div><div><div class="rm-title">Rentabilité chantier</div><div class="rm-sub">Notre value prop cœur — protéger les marges</div></div></div>
+      <div class="rm-item"><div class="rm-week">S5–6</div><div><div class="rm-title">Devis & Gestion commerciale</div><div class="rm-sub">Chiffrer vite, mieux convertir</div></div></div>
+    </div>
+    <div class="roadmap-month">
+      <div class="rm-month-label"><div class="rm-dot gold"></div><span class="rm-month-name">Mois 2 — Maîtrise</span></div>
+      <div class="rm-item gold"><div class="rm-week">S7–8</div><div><div class="rm-title">Facturation & Trésorerie</div><div class="rm-sub">Conformité, délais, impayés</div></div></div>
+      <div class="rm-item gold"><div class="rm-week">S9–10</div><div><div class="rm-title">Achats & Planning</div><div class="rm-sub">Contrôle des dépenses, main d'œuvre</div></div></div>
+      <div class="rm-item gold"><div class="rm-week">S11–12</div><div><div class="rm-title">Pitch & Mise en situation</div><div class="rm-sub">Scénarios réels CS & Sales</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="screen" id="screen-app">
+  <div class="sidebar">
+    <div class="sb-header">
+      <div class="sb-logo">
+        <svg width="24" height="24" viewBox="0 0 40 40" fill="none">
+          <path d="M6 28L14 20L22 28" stroke="#52B788" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 20L22 12L30 20" stroke="#52B788" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 14L11 6" stroke="rgba(82,183,136,.4)" stroke-width="4.5" stroke-linecap="round"/>
+        </svg>
+        <span class="sb-logo-text">Graneet</span>
+      </div>
+      <div class="sb-badge">Value Props · 2 mois</div>
+      <div class="sb-progress">
+        <div class="sb-prog-top"><span>Progression</span><strong id="prog-pct">0%</strong></div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <nav class="sb-nav" id="sb-nav"></nav>
+  </div>
+  <div class="main" id="main-content"></div>
+</div>
+
+<!-- CONGRATS -->
+<div class="screen" id="screen-congrats">
+  <div class="congrats-inner">
+    <span class="trophy">🏆</span>
+    <h2>Parcours <em>terminé !</em></h2>
+    <p>Tu maîtrises maintenant l'ensemble des value propositions Graneet. Tu es prêt(e) à les utiliser en démo, en onboarding client, et pour convaincre les prospects les plus exigeants. Bienvenue dans l'équipe !</p>
+    <button class="btn-restart" onclick="showScreen('screen-welcome')">↩ Recommencer</button>
+  </div>
+</div>
+
+<script>
+const MODULES = [
+  {id:'m1',week:'S1–2',month:'Mois 1 — Fondations',tag:{label:'🏗️ Contexte BTP',cls:'tag-gray'},title:'Comprendre nos clients : la PME du BTP',breadcrumb:'Mois 1 · Semaines 1–2',content:'intro_btp'},
+  {id:'m2',week:'S3–4',month:null,tag:{label:'🛡️ Rentabilité chantier',cls:'tag-green'},title:'Protéger les marges chantier en temps réel',breadcrumb:'Mois 1 · Semaines 3–4',content:'rentabilite'},
+  {id:'m3',week:'S5–6',month:null,tag:{label:'📋 Devis & Commercial',cls:'tag-blue'},title:'Gagner en efficacité sur le chiffrage et la gestion commerciale',breadcrumb:'Mois 1 · Semaines 5–6',content:'devis'},
+  {id:'m4',week:'S7–8',month:'Mois 2 — Maîtrise',tag:{label:'💶 Facturation',cls:'tag-gold'},title:'Facturer juste et améliorer la trésorerie',breadcrumb:'Mois 2 · Semaines 7–8',content:'facturation'},
+  {id:'m5',week:'S9–10',month:null,tag:{label:'🛒 Achats & Planning',cls:'tag-orange'},title:"Contrôler les achats et planifier la main d'œuvre",breadcrumb:'Mois 2 · Semaines 9–10',content:'achats'},
+  {id:'m6',week:'S11–12',month:null,tag:{label:'🎯 Pitch & Situations',cls:'tag-purple'},title:'Mise en situation réelle CS & Sales',breadcrumb:'Mois 2 · Semaines 11–12',content:'pitch'}
+];
+
+let current=0,done=new Set();
+
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function startApp(){showScreen('screen-app');buildNav();loadModule(0);}
+
+function buildNav(){
+  const nav=document.getElementById('sb-nav');nav.innerHTML='';let lastMonth=null;
+  MODULES.forEach((m,i)=>{
+    if(m.month!==lastMonth){lastMonth=m.month;const t=document.createElement('div');t.className='sb-section-title';t.textContent=m.month;nav.appendChild(t);}
+    const el=document.createElement('div');
+    el.className='sb-item'+(i===current?' active':'')+(done.has(i)?' done':'');
+    el.dataset.idx=i;
+    el.innerHTML=`<div class="sb-check"><svg class="sb-check-icon" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#0C1410" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="sb-label">${m.title}</span><span class="sb-week-tag">${m.week}</span>`;
+    el.onclick=()=>loadModule(i);nav.appendChild(el);
+  });
+}
+
+function updateNav(){
+  document.querySelectorAll('.sb-item').forEach(el=>{const i=parseInt(el.dataset.idx);el.classList.toggle('active',i===current);el.classList.toggle('done',done.has(i));});
+  const pct=Math.round(done.size/MODULES.length*100);
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=pct+'%';
+}
+
+function loadModule(idx){
+  current=idx;const m=MODULES[idx];const main=document.getElementById('main-content');
+  const isFirst=idx===0,isLast=idx===MODULES.length-1;
+  const bodyFn=CONTENT[m.content];
+  main.innerHTML=`
+    <div class="mod-header">
+      <div class="mod-header-inner">
+        <div class="mod-breadcrumb">${m.breadcrumb}</div>
+        <div class="mod-header-top">
+          <div>
+            <div class="mod-module-tag ${m.tag.cls}">${m.tag.label}</div>
+            <h2>${m.title}</h2>
+          </div>
+          <div class="mod-week-badge"><div class="wk-label">Semaine</div><div class="wk-num">${m.week}</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="mod-body">${bodyFn()}</div>
+    <div class="mod-nav">
+      <button class="btn-nav" onclick="loadModule(${idx-1})" ${isFirst?'disabled':''}>← Précédent</button>
+      <span class="mod-nav-center">${idx+1} / ${MODULES.length}</span>
+      <button class="btn-nav primary" onclick="markDoneAndNext(${idx})">${isLast?'Terminer 🏆':'Suivant →'}</button>
+    </div>`;
+  main.scrollTo({top:0,behavior:'smooth'});updateNav();
+}
+
+function markDoneAndNext(idx){done.add(idx);updateNav();if(idx===MODULES.length-1){showScreen('screen-congrats');}else{loadModule(idx+1);}}
+
+function handleQuiz(btn,ok,fbId){
+  const block=btn.closest('.quiz-block');
+  block.querySelectorAll('.quiz-opt').forEach(o=>{o.classList.remove('correct','wrong');o.style.pointerEvents='none';});
+  btn.classList.add(ok?'correct':'wrong');
+  const fb=document.getElementById(fbId);fb.classList.add('show',ok?'ok':'ko');
+}
+
+function handleScenario(btn,result,resId){
+  const block=btn.closest('.scenario-block');
+  block.querySelectorAll('.scenario-choice').forEach(c=>{c.classList.remove('ok','ko');c.style.pointerEvents='none';});
+  btn.classList.add(result==='ok'?'ok':'ko');
+  const res=document.getElementById(resId);res.classList.add('show',result==='ok'?'ok':'ko');
+  res.textContent=result==='ok'?'✅ Exactement ! Tu actives la bonne value proposition et tu proposes une action concrète. C\'est comme ça qu\'on construit la confiance.':'❌ Cette réponse n\'exploite pas la value proposition Graneet. Essaie de connecter le problème du client à ce que Graneet peut résoudre.';
+}
+
+function toggleCheck(el){el.classList.toggle('checked');}
+
+const CONTENT={
+  intro_btp:()=>`
+    <p class="intro-text">Avant de parler de Graneet, il faut comprendre <strong>qui sont nos clients</strong> et ce qu'ils vivent au quotidien. C'est la base de tout bon discours commercial ou CS.</p>
+    <div class="section-title">Le monde des PME du BTP</div>
+    <div class="two-col">
+      <div class="card"><div class="card-label"><div class="dot dot-blue"></div><span>Leur quotidien</span></div><p>Un dirigeant de PME BTP gère <strong>plusieurs chantiers simultanément</strong> : chiffrage, commandes fournisseurs, suivi des équipes, facturation client… le tout souvent en mobilité entre bureau et chantiers.</p></div>
+      <div class="card"><div class="card-label"><div class="dot dot-red"></div><span>Leur douleur principale</span></div><p>Ils ne savent pas si leurs chantiers sont rentables <strong>tant qu'ils ne sont pas terminés</strong>. Quand la compta leur dit qu'un chantier a perdu de l'argent, il est trop tard pour réagir.</p></div>
+    </div>
+    <div class="card"><div class="card-label"><div class="dot dot-gold"></div><span>Ce qu'ils utilisent avant Graneet</span></div><p>Excel, comptabilité mensuelle, outils de devis isolés, WhatsApp pour coordonner. <strong>Aucune vision centralisée et en temps réel.</strong></p><div class="pill-row"><span class="pill">Excel 📊</span><span class="pill">EBP / Sage</span><span class="pill">Batappli</span><span class="pill">Papier 📄</span><span class="pill">WhatsApp</span></div></div>
+    <div class="divider"></div>
+    <div class="section-title">Les 6 modules Graneet</div>
+    <div class="two-col">
+      <div class="card"><h4>📋 Devis</h4><p>Chiffrage rapide, bibliothèques de prix, continuité vers la production.</p></div>
+      <div class="card"><h4>💶 Facturation & Encaissement</h4><p>Situations de travaux, factures, suivi des règlements clients.</p></div>
+      <div class="card"><h4>🛒 Achats</h4><p>Commandes fournisseurs, bons de livraison, suivi budgétaire.</p></div>
+      <div class="card"><h4>📅 Planning</h4><p>Affectation des équipes, suivi des heures, coût réel MO.</p></div>
+      <div class="card"><h4>📊 Reporting / Rentabilité</h4><p>Suivi en temps réel des marges par chantier et par entreprise.</p></div>
+      <div class="card"><h4>🗂️ Pré-comptabilité</h4><p>Centralisation des documents, export vers la compta.</p></div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-title">Quiz de démarrage</div>
+    <div class="quiz-block">
+      <h3>Quel est le principal problème de nos clients avant Graneet ?</h3>
+      <p>Choisis la meilleure réponse.</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q1f')">Ils n'ont pas accès à des logiciels de devis</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,true,'q1f')">Ils n'ont pas de vision en temps réel de la rentabilité de leurs chantiers</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q1f')">Ils ne savent pas comment facturer leurs clients</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q1f')">Ils n'ont pas assez de chantiers</button>
+      </div>
+      <div class="quiz-feedback" id="q1f">✅ <strong>Exactement !</strong> La rentabilité en temps réel est notre promesse centrale. Nos clients découvrent souvent trop tard — via la comptabilité — qu'un chantier a perdu de l'argent. Graneet leur permet de le voir en direct et de corriger la trajectoire.</div>
+    </div>`,
+
+  rentabilite:()=>`
+    <p class="intro-text">C'est la <strong>value proposition cœur</strong> de Graneet. Celle que tu dois maîtriser en premier et pouvoir restituer dans toutes les situations.</p>
+    <div class="section-title">🛡️ La proposition de valeur</div>
+    <div class="quote-box"><p>"Protéger vos <em>marges chantier</em> en suivant leur évolution en direct — et réagir tant qu'il est encore temps."</p></div>
+    <div class="pain-card"><span class="pi">😮‍💨</span><p><strong>Le pain :</strong> Les dirigeants BTP pilotent plusieurs chantiers en parallèle mais la remontée d'info pour calculer la rentabilité est complexe. La plupart font leur analyse en comptabilité mensuelle ou dans des Excels chronophages. Quand ils voient qu'un chantier perd de l'argent, <strong>il est souvent trop tard pour agir.</strong></p></div>
+    <div class="benefit-card"><p>😍 <strong>Le bénéfice :</strong> Avoir une <strong>vue en temps réel</strong> de la rentabilité de chaque chantier dans un outil unique. Responsabiliser les conducteurs de travaux en leur donnant accès à ces indicateurs.</p></div>
+    <div class="emotion-card"><p>🧠 <strong>Émotion visée :</strong> Gain de <strong>sérénité</strong> et de <strong>contrôle</strong> pour le dirigeant — il pilote avec confiance, il ne subit plus.</p></div>
+    <div class="divider"></div>
+    <div class="section-title">Ce que Graneet permet concrètement</div>
+    <ul class="checklist">
+      <li class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg class="check-tick" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#0C1410" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-text"><strong>Suivi recettes vs dépenses en temps réel</strong> — S'assurer que le client est facturé plus vite que les dépenses engagées.</div></li>
+      <li class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg class="check-tick" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#0C1410" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-text"><strong>Pilotage budgétaire</strong> — Comparer déboursés réels vs chiffrage initial, donner des objectifs aux conducteurs de travaux.</div></li>
+      <li class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg class="check-tick" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#0C1410" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-text"><strong>Vue agrégée de tous les chantiers</strong> — Trier par marge pour se concentrer sur les chantiers à risque lors des réunions.</div></li>
+      <li class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg class="check-tick" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#0C1410" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="check-text"><strong>Analyse post-chantier</strong> — Marge brute finale et dépenses par type de débours à la clôture.</div></li>
+    </ul>
+    <div class="divider"></div>
+    <div class="section-title">Ce que Graneet ne fait pas encore 🚫</div>
+    <div class="na-card"><p>🚫 <strong>Marge nette :</strong> Graneet ne permet pas encore d'imputer les frais généraux sur un chantier pour calculer la marge nette.</p></div>
+    <div class="na-card"><p>🚫 <strong>Prévisionnel :</strong> Pas encore de projection de marge d'atterrissage future — Graneet donne une vision à l'instant T.</p></div>
+    <div class="divider"></div>
+    <div class="section-title">Mise en situation CS</div>
+    <div class="scenario-block">
+      <p class="scenario-label">Scénario</p>
+      <div class="scenario-context">Lors d'un appel de suivi, ton client te dit : <em>"On vient de clôturer un chantier et on s'est rendu compte qu'on avait perdu 8 000€ dessus. On aurait voulu le savoir plus tôt."</em></div>
+      <p class="scenario-q">Comment tu réagis ?</p>
+      <div class="scenario-choices">
+        <button class="scenario-choice" onclick="handleScenario(this,'ko','sc1r')">"Je suis désolé, ça arrive parfois dans le BTP."</button>
+        <button class="scenario-choice" onclick="handleScenario(this,'ok','sc1r')">"C'est exactement le problème que le suivi de rentabilité Graneet résout. Je t'explique comment paramétrer les budgets chantier pour voir ça en direct à l'avenir ?"</button>
+        <button class="scenario-choice" onclick="handleScenario(this,'ko','sc1r')">"Tu devrais faire une analyse comptable plus fréquente."</button>
+      </div>
+      <div class="scenario-result" id="sc1r"></div>
+    </div>
+    <div class="quiz-block">
+      <h3>Quelle émotion principale vise cette value prop ?</h3>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q2f')">Excitation</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,true,'q2f')">Sérénité et contrôle</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q2f')">Surprise</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q2f')">Fierté</button>
+      </div>
+      <div class="quiz-feedback" id="q2f">✅ <strong>Sérénité et contrôle.</strong> Le dirigeant n'est plus dans le flou — il pilote en temps réel avec confiance, et peut déléguer en responsabilisant ses équipes.</div>
+    </div>`,
+
+  devis:()=>`
+    <p class="intro-text">Trois value propositions liées au module Devis — fondamentales pour les équipes <strong>Sales et CS</strong> qui accompagnent des entreprises en phase commerciale.</p>
+    <div class="section-title">📋 VP 1 — Efficacité sur le chiffrage</div>
+    <div class="quote-box"><p>"Gagnez en efficacité et productivité dans la <em>production de devis</em> pour améliorer votre relation commerciale."</p></div>
+    <div class="pain-card"><span class="pi">😮‍💨</span><p><strong>Pain :</strong> Les entreprises BTP passent un temps considérable à chiffrer manuellement. Les erreurs de calcul, la recopie depuis des Excels, l'absence de bibliothèque de prix centralisée ralentissent la production. Un devis rendu en retard peut faire perdre un marché.</p></div>
+    <div class="benefit-card"><p>😍 <strong>Bénéfice :</strong> Produire des devis <strong>plus vite et avec moins d'erreurs</strong> grâce aux bibliothèques de prix et à la réutilisation. Passer plus de temps à vendre qu'à chiffrer.</p></div>
+    <div class="divider"></div>
+    <div class="section-title">🔗 VP 2 — Continuité devis → chantier</div>
+    <div class="quote-box"><p>"Assurer une continuité de la <em>protection de marge</em> entre le chiffrage du devis et le suivi de production."</p></div>
+    <div class="pain-card"><span class="pi">😮‍💨</span><p><strong>Pain :</strong> Le chiffrage du devis et le suivi de chantier vivent dans deux outils différents. Quand le chantier démarre, les hypothèses de marges initiales sont perdues.</p></div>
+    <div class="benefit-card"><p>😍 <strong>Bénéfice :</strong> La marge théorique calculée dans le devis devient le <strong>budget de référence du chantier</strong>. Les conducteurs de travaux partent avec un cap clair et mesurable.</p></div>
+    <div class="divider"></div>
+    <div class="section-title">📈 VP 3 — Suivi des opportunités commerciales</div>
+    <div class="quote-box"><p>"Gagner en visibilité sur ses opportunités de vente et <em>optimiser son processus commercial.</em>"</p></div>
+    <div class="pain-card"><span class="pi">😮‍💨</span><p><strong>Pain :</strong> Difficile de savoir où en sont tous les devis envoyés, quels sont les taux de conversion, quels chantiers sont les plus rentables. Les décisions commerciales se prennent à l'instinct.</p></div>
+    <div class="benefit-card"><p>😍 <strong>Bénéfice :</strong> Pipeline commercial clair, suivi de l'avancement de chaque devis, analyse du taux de transformation, priorisation des opportunités les plus prometteuses.</p></div>
+    <div class="divider"></div>
+    <div class="quiz-block">
+      <h3>Un prospect te dit : "On met 3 jours à produire un devis complexe." Quelle value prop activer ?</h3>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q3f')">La rentabilité chantier en temps réel</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,true,'q3f')">L'efficacité sur la production de devis — bibliothèques de prix, réutilisation, rapidité</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q3f')">La facturation et la conformité</button>
+      </div>
+      <div class="quiz-feedback" id="q3f">✅ <strong>Exactement.</strong> Le chiffrage lent est un pain direct — montre-lui comment les bibliothèques de prix et la réutilisation divisent le temps de production de devis.</div>
+    </div>`,
+
+  facturation:()=>`
+    <p class="intro-text">Deux value propositions autour de la facturation — très importantes pour <strong>CS</strong> (accompagnement) et <strong>Sales</strong> (conformité et trésorerie).</p>
+    <div class="section-title">💶 VP 1 — Facturer juste, être payé plus vite</div>
+    <div class="quote-box"><p>"Protéger votre rentabilité en facturant de manière <em>juste</em> vos chantiers — en réduisant les erreurs et en améliorant vos délais de règlement."</p></div>
+    <div class="pain-card"><span class="pi">😮‍💨</span><p><strong>Pain :</strong> La facturation BTP par situations de travaux est complexe. Les erreurs sur les montants, les oublis de facturation et les aller-retours clients allongent les délais de paiement et fragilisent la trésorerie.</p></div>
+    <div class="benefit-card"><p>😍 <strong>Bénéfice :</strong> Facturer avec précision depuis l'avancement réel du chantier. Réduire les litiges et être payé plus vite.</p></div>
+    <div class="divider"></div>
+    <div class="section-title">💰 VP 2 — Améliorer la position de trésorerie</div>
+    <div class="quote-box"><p>"Améliorer votre position de trésorerie en assurant un <em>suivi précis des règlements</em> clients et décaissements."</p></div>
+    <div class="pain-card"><span class="pi">😮‍💨</span><p><strong>Pain :</strong> Les PME BTP portent souvent la trésorerie de leurs chantiers — elles dépensent avant d'être payées. Les impayés et retards de règlement sont fréquents et difficiles à suivre.</p></div>
+    <div class="benefit-card"><p>😍 <strong>Bénéfice :</strong> Vue claire des factures en attente, règlements reçus et impayés. Savoir exactement quand relancer et combien on attend.</p></div>
+    <div class="emotion-card"><p>🧠 <strong>Émotion :</strong> Réduction du <strong>stress lié à la trésorerie</strong> — le dirigeant sait à tout moment ce qui lui est dû et peut anticiper ses besoins de financement.</p></div>
+    <div class="divider"></div>
+    <div class="section-title">Mise en situation CS</div>
+    <div class="scenario-block">
+      <p class="scenario-label">Scénario</p>
+      <div class="scenario-context">Ton client te contacte : <em>"J'ai un client qui conteste ma dernière situation de travaux. Il dit que j'ai surfacturé une ligne. Je ne sais même plus comment j'ai calculé."</em></div>
+      <p class="scenario-q">Comment tu l'aides ?</p>
+      <div class="scenario-choices">
+        <button class="scenario-choice" onclick="handleScenario(this,'ko','sc2r')">"Tu devrais appeler ton client pour trouver un accord à l'amiable."</button>
+        <button class="scenario-choice" onclick="handleScenario(this,'ok','sc2r')">"Dans Graneet, ta situation est calculée depuis l'avancement réel du chantier — tu peux lui montrer la traçabilité complète de chaque ligne et défendre ta facture avec des données."</button>
+        <button class="scenario-choice" onclick="handleScenario(this,'ko','sc2r')">"Il faudra peut-être faire un avoir pour éviter le conflit."</button>
+      </div>
+      <div class="scenario-result" id="sc2r"></div>
+    </div>
+    <div class="quiz-block">
+      <h3>Quel est le lien entre facturation et rentabilité chantier ?</h3>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q4f')">Ce sont deux sujets complètement séparés</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,true,'q4f')">Si tu factures moins que ce que tu as dépensé, ta marge s'effondre — la facturation juste protège directement ta rentabilité</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q4f')">La rentabilité dépend uniquement des achats, pas de la facturation</button>
+      </div>
+      <div class="quiz-feedback" id="q4f">✅ <strong>Exact !</strong> Facturer avec précision et rapidité, c'est protéger directement sa marge. C'est un argument puissant à utiliser en démo.</div>
+    </div>`,
+
+  achats:()=>`
+    <p class="intro-text">Les achats et le planning représentent une part énorme des coûts d'un chantier. Ces value props sont souvent sous-estimées dans le discours commercial — c'est un angle différenciateur fort.</p>
+    <div class="section-title">🛒 VP 1 — Centraliser et contrôler les achats</div>
+    <div class="quote-box"><p>"Centralisez vos factures d'achats pour avoir une vision complète en temps réel de votre <em>rentabilité de chantier et d'entreprise.</em>"</p></div>
+    <div class="pain-card"><span class="pi">😮‍💨</span><p><strong>Pain :</strong> Les factures fournisseurs arrivent en décalage, sont saisies manuellement en comptabilité, et ne sont pas rattachées aux chantiers en temps réel. Impossible de savoir ce qu'on a vraiment dépensé sur un chantier avant la clôture comptable.</p></div>
+    <div class="benefit-card"><p>😍 <strong>Bénéfice :</strong> Toutes les dépenses (matériaux, sous-traitance, MO) rattachées aux chantiers en temps réel. La vision de rentabilité devient immédiatement plus précise et fiable.</p></div>
+    <div class="divider"></div>
+    <div class="section-title">📅 VP 2 — Planifier et suivre la main d'œuvre</div>
+    <div class="quote-box"><p>"Planifier et anticiper la main d'œuvre sur vos chantiers pour gagner en <em>visibilité sur vos ressources.</em>"</p></div>
+    <div class="pain-card"><span class="pi">😮‍💨</span><p><strong>Pain :</strong> Planification des équipes sur tableaux blancs, WhatsApp ou Excel. Les heures réellement travaillées ne remontent pas automatiquement pour alimenter le suivi de rentabilité.</p></div>
+    <div class="benefit-card"><p>😍 <strong>Bénéfice :</strong> Planifier les équipes, suivre les heures, connaître le <strong>coût réel de la main d'œuvre</strong> par chantier — et préparer la saisie en paie.</p></div>
+    <div class="divider"></div>
+    <div class="section-title">🗂️ VP 3 — Centraliser et partager les documents</div>
+    <div class="quote-box"><p>"Centralisez tous vos documents sur une seule plateforme pour <em>fluidifier la collaboration.</em>"</p></div>
+    <div class="benefit-card"><p>😍 <strong>Bénéfice :</strong> Plus de recherche dans des dossiers éparpillés. Tous les documents liés à un chantier (devis, factures, BL, plans) accessibles par toute l'équipe depuis un seul endroit.</p></div>
+    <div class="divider"></div>
+    <div class="quiz-block">
+      <h3>Pourquoi les achats sont-ils critiques pour la rentabilité chantier ?</h3>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q5f')">Parce que les fournisseurs demandent souvent des délais de paiement courts</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,true,'q5f')">Parce qu'ils représentent une grande part des coûts, et s'ils ne sont pas rattachés en temps réel aux chantiers, la vision de rentabilité est faussée</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'q5f')">Parce que la TVA sur les achats est compliquée à gérer</button>
+      </div>
+      <div class="quiz-feedback" id="q5f">✅ <strong>Parfait.</strong> Matériaux + sous-traitance + main d'œuvre = la majorité des coûts d'un chantier. Sans les rattacher en temps réel, le suivi de rentabilité est une illusion.</div>
+    </div>`,
+
+  pitch:()=>`
+    <p class="intro-text">Tu as maintenant toutes les value propositions en tête. Ce module final te met en situation réelle — comme si tu étais face à un prospect Sales ou un client CS exigeant.</p>
+    <div class="section-title">🎯 Les grands principes du pitch Graneet</div>
+    <div class="two-col">
+      <div class="card"><h4>Pain → Solution → Émotion</h4><p>Toujours commencer par valider le pain du client avant de parler de fonctionnalités. Présenter le bénéfice concret. Terminer sur l'émotion ressentie.</p></div>
+      <div class="card"><h4>Ne jamais vendre des features</h4><p>Graneet n'est pas "un logiciel de devis et facturation". C'est <strong>"votre outil pour protéger vos marges et piloter vos chantiers avec sérénité."</strong></p></div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-title">Mise en situation — Sales</div>
+    <div class="scenario-block">
+      <p class="scenario-label">Scénario 1 · Objection Excel</p>
+      <div class="scenario-context">Un dirigeant BTP (15 salariés, 3M€ CA) te dit lors d'une démo : <em>"Excel c'est bien, ça fait 20 ans que ça marche. Pourquoi je changerais ?"</em></div>
+      <p class="scenario-q">Quelle est la meilleure réponse ?</p>
+      <div class="scenario-choices">
+        <button class="scenario-choice" onclick="handleScenario(this,'ko','sc3r')">"Parce que Graneet est plus moderne et plus simple pour vos équipes terrain."</button>
+        <button class="scenario-choice" onclick="handleScenario(this,'ok','sc3r')">"Excel c'est bien pour stocker de l'information, mais est-ce qu'il vous dit aujourd'hui, en temps réel, si votre chantier de l'avenue Foch est en train de perdre de l'argent ? Graneet, oui."</button>
+        <button class="scenario-choice" onclick="handleScenario(this,'ko','sc3r')">"Excel c'est risqué, vous pouvez perdre vos fichiers."</button>
+      </div>
+      <div class="scenario-result" id="sc3r"></div>
+    </div>
+    <div class="scenario-block">
+      <p class="scenario-label">Scénario 2 · Réengagement CS</p>
+      <div class="scenario-context">Un client CS te dit après 2 mois d'utilisation : <em>"Je ne comprends pas bien à quoi sert la partie Reporting, je n'y vais jamais."</em></div>
+      <p class="scenario-q">Comment tu réengages ce client ?</p>
+      <div class="scenario-choices">
+        <button class="scenario-choice" onclick="handleScenario(this,'ko','sc4r')">"C'est normal, c'est une partie avancée, ne t'en préoccupe pas."</button>
+        <button class="scenario-choice" onclick="handleScenario(this,'ok','sc4r')">"C'est en fait la partie la plus importante de Graneet — c'est là que tu peux voir en temps réel si tes chantiers sont rentables. Je te propose une session ensemble pour paramétrer ton premier suivi de marge ?"</button>
+        <button class="scenario-choice" onclick="handleScenario(this,'ko','sc4r')">"Tu peux regarder notre documentation en ligne, c'est bien expliqué."</button>
+      </div>
+      <div class="scenario-result" id="sc4r"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-title">🏁 Récapitulatif — Les 8 value propositions Graneet</div>
+    <div class="card">
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <div style="display:flex;align-items:center;gap:12px"><span class="pill">🛡️ Rentabilité</span><span style="font-size:.83rem;color:#374151">Protéger les marges chantier en temps réel</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span class="pill">📋 Chiffrage</span><span style="font-size:.83rem;color:#374151">Gagner en efficacité sur la production de devis</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span class="pill">🔗 Continuité</span><span style="font-size:.83rem;color:#374151">Lier le devis au suivi de chantier (marge théorique → réelle)</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span class="pill">📈 Pipeline</span><span style="font-size:.83rem;color:#374151">Suivre et optimiser les opportunités commerciales</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span class="pill gold">💶 Facturation</span><span style="font-size:.83rem;color:#374151">Facturer juste, être payé plus vite</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span class="pill gold">💰 Trésorerie</span><span style="font-size:.83rem;color:#374151">Maîtriser les règlements et réduire les impayés</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span class="pill gold">🛒 Achats</span><span style="font-size:.83rem;color:#374151">Centraliser et contrôler les dépenses fournisseurs</span></div>
+        <div style="display:flex;align-items:center;gap:12px"><span class="pill gold">📅 Planning</span><span style="font-size:.83rem;color:#374151">Planifier la MO, connaître le coût réel par chantier</span></div>
+      </div>
+    </div>
+    <div class="quiz-block" style="margin-top:6px">
+      <h3>Quiz final — La phrase qui résume Graneet</h3>
+      <p>Laquelle résume le mieux notre positionnement ?</p>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'qf')">Un logiciel de devis et facturation pour les artisans BTP</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'qf')">Un ERP BTP qui gère toute la comptabilité de l'entreprise</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,true,'qf')">La plateforme qui permet aux dirigeants de PME BTP de protéger leur rentabilité et de piloter leurs chantiers avec sérénité</button>
+        <button class="quiz-opt" onclick="handleQuiz(this,false,'qf')">Un outil de planning pour les conducteurs de travaux</button>
+      </div>
+      <div class="quiz-feedback" id="qf">🏆 <strong>Exactement !</strong> Pas un outil de saisie — une plateforme de pilotage qui protège ce qui compte le plus : la marge. Tu es prêt(e) à en parler avec conviction !</div>
+    </div>`
+};
+
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    document.getElementById('loading').classList.add('out');
+    setTimeout(()=>{document.getElementById('loading').style.display='none';showScreen('screen-welcome');},700);
+  },1600);
+});
+</script>
+</body>
+</html>
